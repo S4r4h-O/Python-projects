@@ -3,9 +3,13 @@ import functions
 
 todos_file = "todos.txt"
 
+st.set_page_config(layout="wide")
 st.title("My TODOS App")
 
 user_input = st.text_input(label="Write a todo")
+
+with st.sidebar:
+    st.write("My app")
 
 col1, col2 = st.columns(2)
 
@@ -24,8 +28,8 @@ with col1:
                 checkbox = st.checkbox(todo, key=todo)
                 if checkbox:
                     popover = st.popover("Complete or edit")
-                    complete = popover.button("Complete", key=f"complete_button_{todo}")
-                    edit = popover.button("Edit", key=f"edit_button_{todo}")
+                    complete = popover.button("Complete", key=f"complete_button_{todo}", use_container_width=True)
+                    edit = popover.button("Edit", key=f"edit_button_{todo}", use_container_width=True)
                     if edit:
                         # Reassign the key 'todo_to_edit' to todo (selected_todo in the function edit_todo())
                         st.session_state.todo_to_edit = todo
