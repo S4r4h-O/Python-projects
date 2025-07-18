@@ -28,11 +28,23 @@ with col1:
                 checkbox = st.checkbox(todo, key=todo)
                 if checkbox:
                     popover = st.popover("Complete or edit")
-                    complete = popover.button("Complete", key=f"complete_button_{todo}", use_container_width=True)
-                    edit = popover.button("Edit", key=f"edit_button_{todo}", use_container_width=True)
+                    complete = popover.button("Complete", key=f"cb_{todo}", use_container_width=True)
+                    edit = popover.button("Edit", key=f"eb_{todo}", use_container_width=True)
+                    delete = popover.button("Delete TODO", key=f"db_{todo}")
                     if edit:
                         # Reassign the key 'todo_to_edit' to todo (selected_todo in the function edit_todo())
                         st.session_state.todo_to_edit = todo
+
+                    elif complete:
+                        pass
+
+                    elif delete:
+                        todo_to_delete = todo
+                        todos = functions.get_todos(filepath=todos_file)
+                        index = todos.index(todo_to_delete)
+                        todos.pop(index)
+                        functions.write_todos(filepath=todos_file, content=todos)
+
 
 # If session_state.todo_to_edit is assigned to the selected_todo (checkbox), the function edit() is called
 if st.session_state.todo_to_edit:
