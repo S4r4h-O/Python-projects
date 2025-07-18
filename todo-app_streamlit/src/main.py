@@ -1,59 +1,69 @@
 import streamlit as st
 import functions
+from pathlib import Path
 
-todos_file = "todos.txt"
+todos_file = Path("todos.txt")
+if not todos_file.exists():
+    functions.write_todos("todos.txt", "")
 
-st.set_page_config(layout="wide")
+completed_file = Path("completed.txt")
+if not completed_file.exists():
+    functions.write_todos("completed.txt", "")
+
+# st.set_page_config(layout="wide")
 st.title("My TODOS App")
+
+with st.sidebar:
+    st.write("""
+             This is an improved version of the Streamlit app
+             taught by Ardit Sulce.
+             """)
+    st.image("assets/python_logo.png")
+
 
 user_input = st.text_input(label="Write a todo")
 
-with st.sidebar:
-    st.write("My app")
-
 col1, col2 = st.columns(2)
-
-# Define the 'todo_to_edit' key as None 
-if 'todo_to_edit' not in st.session_state:
-    st.session_state.todo_to_edit = None
 
 with col1:
     with st.container(border=True):
         st.write("Your TODOS")
         todos_tab, completed_tab = st.tabs(["TODOS", "Completed"])
-            
+
+        # Todo tab to show only the unfinished tasks    
         with todos_tab:
             todos = functions.get_todos(todos_file)
             for todo in todos:
+                # Creates checkboxes for all the todos
                 checkbox = st.checkbox(todo, key=todo)
                 if checkbox:
+                    # If some some checkbox is checked, a popover is open only to the
+                    # selected todo
                     popover = st.popover("Complete or edit")
-                    complete = popover.button("Complete", key=f"cb_{todo}", use_container_width=True)
-                    edit = popover.button("Edit", key=f"eb_{todo}", use_container_width=True)
-                    delete = popover.button("Delete TODO", key=f"db_{todo}")
+                    complete = popover.button("Complete", key=f"cb_{todo}", 
+                                              use_container_width=True)
+                    edit = popover.button("Edit", key=f"eb_{todo}", 
+                                          use_container_width=True)
+                    delete = popover.button("Delete TODO", key=f"db_{todo}", 
+                                            use_container_width=True)
+                    
                     if edit:
-                        # Reassign the key 'todo_to_edit' to todo (selected_todo in the function edit_todo())
-                        st.session_state.todo_to_edit = todo
+                        functions.edit_todo(selected_todo=todo)
 
                     elif complete:
-                        pass
+                        functions.complete_todo(todo)
 
                     elif delete:
-                        todo_to_delete = todo
-                        todos = functions.get_todos(filepath=todos_file)
-                        index = todos.index(todo_to_delete)
-                        todos.pop(index)
-                        functions.write_todos(filepath=todos_file, content=todos)
-
-
-# If session_state.todo_to_edit is assigned to the selected_todo (checkbox), the function edit() is called
-if st.session_state.todo_to_edit:
-    functions.edit_todo(st.session_state.todo_to_edit)
+                        functions.delete_todo(todo)
+        
+        # Tab to show only the finished tasks
+        with completed_tab:
+            completed_todos = functions.get_todos(completed_file)
+            for completed in completed_todos:
+                st.write(completed)
 
 with col2:
     add_button = st.button("Add TODO", use_container_width=True)
-    delete_button = st.button("Delete TODO", use_container_width=True)
-
 
 if user_input:
     if add_button:
@@ -61,8 +71,3 @@ if user_input:
         todos.append(user_input + "\n")
         functions.write_todos(filepath=todos_file, content=todos)
         st.rerun()
-
-        
-
-
-st.session_state

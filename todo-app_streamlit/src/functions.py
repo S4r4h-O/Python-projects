@@ -21,6 +21,27 @@ def edit_todo(selected_todo):
         index = todos.index(selected_todo)
         todos[index] = new_todo
         write_todos(content=todos, filepath="todos.txt")
-        # Define the key 'todo_to_edit' as None every time we call the function, so we can reassign it as the variable todo later
-        st.session_state.todo_to_edit = None
         st.rerun()
+
+
+def complete_todo(todo_to_complete):
+    todo_to_complete = todo_to_complete
+    todos = get_todos("todos.txt")
+    # First, append the selected todo to the completed file
+    completed_todos = get_todos("completed.txt")
+    completed_todos.append(todo_to_complete)
+    write_todos("completed.txt", completed_todos)
+    # Then remove the todo from the todos file
+    index = todos.index(todo_to_complete)
+    todos.pop(index)
+    write_todos("todos.txt", todos)
+    st.rerun()
+
+
+def delete_todo(todo_to_delete):
+    todo_to_delete = todo_to_delete
+    todos = get_todos(filepath="todos.txt")
+    index = todos.index(todo_to_delete)
+    todos.pop(index)
+    write_todos("todos.txt", todos)
+    st.rerun()
