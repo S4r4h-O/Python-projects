@@ -10,3 +10,5 @@ streamlit.errors.StreamlitDuplicateElementId: There are multiple button elements
 - [ ] Remove the hardcoded parameters
 
 - [ ] Add verification of existence of the txt files
+
+- [ ] Functions should have a class
