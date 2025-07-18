@@ -39,7 +39,7 @@ with col1:
                 if checkbox:
                     # If some some checkbox is checked, a popover is open only to the
                     # selected todo
-                    popover = st.popover("Complete or edit")
+                    popover = st.popover("Item actions")
                     complete = popover.button("Complete", key=f"cb_{todo}", 
                                               use_container_width=True)
                     edit = popover.button("Edit", key=f"eb_{todo}", 
