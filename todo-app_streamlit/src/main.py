@@ -1,4 +1,3 @@
-import enum
 import streamlit as st
 import functions
 
@@ -45,6 +44,7 @@ if user_input:
         todos = functions.get_todos(todos_file)
         todos.append(user_input + "\n")
         functions.write_todos(filepath=todos_file, content=todos)
+        st.rerun()
 
         
 
