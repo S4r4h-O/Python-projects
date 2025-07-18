@@ -10,6 +10,10 @@ user_input = st.text_input(label="Write a todo")
 
 col1, col2 = st.columns(2)
 
+# Define the 'todo_to_edit' key as None 
+if 'todo_to_edit' not in st.session_state:
+    st.session_state.todo_to_edit = None
+
 with col1:
     with st.container(border=True):
         st.write("Your TODOS")
@@ -19,12 +23,20 @@ with col1:
             todos = functions.get_todos(todos_file)
             for todo in todos:
                 checkbox = st.checkbox(todo, key=todo)
+                if checkbox:
+                    popover = st.popover("Complete or edit")
+                    complete = popover.button("Complete", key=f"complete_button_{todo}")
+                    edit = popover.button("Edit", key=f"edit_button_{todo}")
+                    if edit:
+                        # Reassign the key 'todo_to_edit' to todo (selected_todo in the function edit_todo())
+                        st.session_state.todo_to_edit = todo
 
+# If session_state.todo_to_edit is assigned to the selected_todo (checkbox), the function edit() is called
+if st.session_state.todo_to_edit:
+    functions.edit_todo(st.session_state.todo_to_edit)
 
 with col2:
     add_button = st.button("Add TODO", use_container_width=True)
-    edit_button = st.button("Edit TODO", use_container_width=True)
-    complete_button  = st.button("Complete TODO", use_container_width=True)
     delete_button = st.button("Delete TODO", use_container_width=True)
 
 
