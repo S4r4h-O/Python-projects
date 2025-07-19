@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from numpy._core import records
 import pandas as pd
 
-app = Flask("__name__")
+app = Flask(__name__)
 
 stations = pd.read_csv("data_small/stations.txt", skiprows=17)
 stations = stations[["STAID", "STANAME                                 "]]
