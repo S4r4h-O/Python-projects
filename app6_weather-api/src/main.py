@@ -13,7 +13,7 @@ def about(station: str, date: str):
     filename = f"data_small/TG_STAID0000{station}.txt"
     df = pd.read_csv(filename, skiprows=20,
                      parse_dates=["    DATE"])
-    temperature = df.loc[df['    DATE'] == date]['   TG'].squeeze() / 10
+    temperature = df.loc[df["    DATE"] == date]["   TG"].squeeze() / 10
     return {
             "station": station,
             "date": date,
