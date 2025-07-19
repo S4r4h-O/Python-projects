@@ -14,10 +14,12 @@ if not completed_file.exists():
 st.title("My TODOS App")
 
 with st.sidebar:
-    st.write("""
+    st.write(
+        """
              This is an improved version of the Streamlit app
              taught by Ardit Sulce.
-             """)
+             """
+    )
     st.image("assets/python_logo.png")
 
 
@@ -30,7 +32,7 @@ with col1:
         st.write("Your TODOS")
         todos_tab, completed_tab = st.tabs(["TODOS", "Completed"])
 
-        # Todo tab to show only the unfinished tasks    
+        # Todo tab to show only the unfinished tasks
         with todos_tab:
             todos = functions.get_todos(todos_file)
             for todo in todos:
@@ -40,13 +42,16 @@ with col1:
                     # If some some checkbox is checked, a popover is open only to the
                     # selected todo
                     popover = st.popover("Item actions")
-                    complete = popover.button("Complete", key=f"cb_{todo}", 
-                                              use_container_width=True)
-                    edit = popover.button("Edit", key=f"eb_{todo}", 
-                                          use_container_width=True)
-                    delete = popover.button("Delete TODO", key=f"db_{todo}", 
-                                            use_container_width=True)
-                    
+                    complete = popover.button(
+                        "Complete", key=f"cb_{todo}", use_container_width=True
+                    )
+                    edit = popover.button(
+                        "Edit", key=f"eb_{todo}", use_container_width=True
+                    )
+                    delete = popover.button(
+                        "Delete TODO", key=f"db_{todo}", use_container_width=True
+                    )
+
                     if edit:
                         functions.edit_todo(selected_todo=todo)
 
@@ -55,7 +60,7 @@ with col1:
 
                     elif delete:
                         functions.delete_todo(todo)
-        
+
         # Tab to show only the finished tasks
         with completed_tab:
             completed_todos = functions.get_todos(completed_file)
