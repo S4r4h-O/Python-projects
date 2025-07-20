@@ -4,4 +4,3 @@ __pycache__
 .ipynb_checkpoints
 exercise_happiness-data
 *.txt
-../exercises/exercise_astronomy-site/src/images/
