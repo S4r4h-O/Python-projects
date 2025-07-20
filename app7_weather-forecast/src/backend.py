@@ -18,7 +18,7 @@ def get_data(place, forecast_days=None):
         nr_values = 8 * forecast_days
         filtered_data = filtered_data[:nr_values]       
 
-    except ConnectionResetError:
+    except (ConnectionResetError, ConnectionError):
         st.write("Too many requests! Wait some time before trying again")
 
     return filtered_data
