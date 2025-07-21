@@ -1,12 +1,15 @@
+import os
 import smtplib
 import imghdr
 from email.message import EmailMessage
+import glob
 
 username = "shophane612@gmail.com"
 password = "flrd ahru becl wito"
 receiver = "shophane612@gmail.com"
 
 def send_email(image_path):
+    print("Email function started")
     email_message = EmailMessage()
     email_message["Subject"] = "New customer showed up!"
     email_message.set_content("Hey, we just saw a new customer!")
@@ -22,6 +25,13 @@ def send_email(image_path):
     gmail.login(username, password)
     gmail.sendmail(username, receiver,email_message.as_string())
     gmail.quit()
+    print("Email function ended")
+    print("Clean folder function started")
+    
+    images = glob.glob("images/*.png")
+    for image in images:
+        os.remove(image)
+    print("Clean folder function ended")
 
 
 if __name__ == "__main__":

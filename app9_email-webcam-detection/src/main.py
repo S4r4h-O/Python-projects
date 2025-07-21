@@ -1,7 +1,9 @@
 import cv2
+import ssl
 import time
 import glob
 from emailing import send_email
+from threading import Thread
 
 video = cv2.VideoCapture(1)
 time.sleep(1)
@@ -9,6 +11,7 @@ time.sleep(1)
 first_frame = None
 status_list = []
 count = 1
+        
 while True:
     status = 0
     check, frame = video.read()
@@ -52,10 +55,12 @@ while True:
     status_list = status_list[-2:]
 
     if status_list[0] == 1 and status_list[1] == 0:
-        send_email()
+        ssl.create_default_context()
+        email_thread = Thread(target=send_email, args=(image_with_object, ))
+        email_thread.daemon = True
+        email_thread.start()
 
     cv2.imshow("Video", frame)
-
 
     key = cv2.waitKey(1)
 
