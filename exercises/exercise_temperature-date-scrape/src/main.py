@@ -8,6 +8,7 @@ cursor = connection.cursor()
 
 URL = "http://programmer100.pythonanywhere.com/"
 
+
 def read():
     date = cursor.execute("SELECT date FROM temperatures")
     date = date.fetchall()
