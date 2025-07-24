@@ -1,33 +1,41 @@
 import time
+import sqlite3
 import requests
-import pandas as pd
-import streamlit as st
-import plotly.express as px
 from bs4 import BeautifulSoup
 
-
-def write(content):
-    with open("data.txt", "a") as file:
-        file.write(content)
+connection = sqlite3.connect("temperatures.db")
+cursor = connection.cursor()
 
 
-now = time.strftime("%d-%m-%y-%H-%M-%S")
+def read():
+    date = cursor.execute("SELECT date FROM temperatures")
+    date = date.fetchall()
+    temperature = cursor.execute("SELECT temperature FROM temperatures")
+    temperature = temperature.fetchall()
+    return date, temperature
 
-URL = "http://programmer100.pythonanywhere.com/"
 
-r = requests.get(URL)
-r = r.text
+def write(temperature):
+    now = time.strftime("%d-%m-%y-%H-%M-%S")
+    cursor.execute("INSERT INTO temperatures VALUES(?,?)", 
+                   (now, temperature))
+    connection.commit()
 
-soup = BeautifulSoup(r, 'html.parser')
-temperature = soup.find(id="temperatureId")
-temperature = temperature.b
-write(f"{now},{temperature.string}" + "\n")
 
-df = pd.read_csv("data.txt", parse_dates=True)
+def scrape(url):
+    r = requests.get(url)
+    r = r.text
+    return r
 
-figure = px.line(x=df["date"], y=df["temperature"],
-                 labels={
-                     "x": "Date", "y": "Temperature"
-                     })
 
-st.plotly_chart(figure)
+def extract(source):
+    soup = BeautifulSoup(source, 'html.parser')
+    temperature = soup.find(id="temperatureId")
+    temperature = temperature.b.string
+    return temperature
+
+
+if __name__ == "__main__":
+    scraped = scrape(URL)
+    extracted = extract(scraped)
+    write(extracted)
