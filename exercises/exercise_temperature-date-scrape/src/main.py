@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 connection = sqlite3.connect("temperatures.db")
 cursor = connection.cursor()
 
+URL = "http://programmer100.pythonanywhere.com/"
 
 def read():
     date = cursor.execute("SELECT date FROM temperatures")
@@ -23,7 +24,7 @@ def write(temperature):
 
 
 def scrape(url):
-    r = requests.get(url)
+    r = requests.get(URL)
     r = r.text
     return r
 
