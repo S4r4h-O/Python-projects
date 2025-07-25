@@ -2,7 +2,8 @@ import pandas as pd
 
 df = pd.read_csv("hotels.csv", dtype={"id": str})
 df_cards = pd.read_csv("cards.csv", dtype=str).to_dict(orient="records")
-print(df_cards)
+df_cards_security = pd.read_csv("card_security.csv", dtype=str)
+
 
 # class User:
 #     def view_hotels(self):
@@ -45,6 +46,15 @@ class CreditCard:
             return False
 
 
+class SecureCreditCard(CreditCard):
+    def authenticate(self, given_password):
+        password = df_cards_security.loc[df_cards_security["number"] == self.number, "password"].squeeze()
+        if password == given_password:
+            return True
+        else:
+            return False
+    
+
 class ReservationTicket:
     def __init__(self, customer_name, hotel_object):
         self.customer_name = customer_name
@@ -65,14 +75,18 @@ hotel_id = input("Enter the id of the hotel: ")
 hotel = Hotel(hotel_id)
 
 if hotel.available():
-    credit_card = CreditCard(number="1234567890123456")
+    credit_card = SecureCreditCard(number="1234567890123456")
     if credit_card.validate(expiration_date="12/26", holder="JOHN SMITH", cvc="123"):
-        hotel.book()
-        name = input("Enter your name: ")
-        reservation_ticket = ReservationTicket(customer_name=name, 
-                                           hotel_object=hotel)
-        print(reservation_ticket.generate())
+        password = input("Enter your card password: ")
+        if credit_card.authenticate(password):
+            hotel.book()
+            name = input("Enter your name: ")
+            reservation_ticket = ReservationTicket(customer_name=name, 
+                                               hotel_object=hotel)
+            print(reservation_ticket.generate())
+        else:
+            print("Credit card authentication failed")
     else:
-        print("There was some problem with your payment")
+        print("There was a problem with your payment")
 else:
     print("Hotel not free")
