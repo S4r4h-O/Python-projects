@@ -5,7 +5,7 @@ import glob
 from emailing import send_email
 from threading import Thread
 
-video = cv2.VideoCapture(1)
+video = cv2.VideoCapture(0)
 time.sleep(1)
 
 first_frame = None

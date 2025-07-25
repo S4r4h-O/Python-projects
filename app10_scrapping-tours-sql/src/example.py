@@ -4,7 +4,7 @@ import sqlite3
 connection = sqlite3.connect("database.db")
 cursor = connection.cursor()
 
-# Query data
+# Query all data based on a condition
 cursor.execute("SELECT * FROM events WHERE date='2088.10.15'")
 rows = (cursor.fetchall())
 print(rows)
