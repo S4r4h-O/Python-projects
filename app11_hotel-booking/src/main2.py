@@ -1,4 +1,5 @@
 import pandas
+from abc import ABC, abstractmethod
 
 df = pandas.read_csv("hotels.csv", dtype={"id": str})
 
@@ -36,6 +37,12 @@ class Hotel:
             return False
 
 
+# Abstract class. When some method should be shared with other classes
+class Ticket(ABC):
+    def generate(self):
+        pass
+
+
 class ReservationTicket:
     def __init__(self, customer_name, hotel_object):
         self.customer_name = customer_name
@@ -63,23 +70,29 @@ class ReservationTicket:
         return amount * 1.2
 
 
-hotel1 = Hotel("188")
-hotel2 = Hotel("134")
+class DigitalTicket(ReservationTicket):
+    def foo():
+        pass
 
-print(hotel1.available())
-print(hotel1.name)
-print(hotel2.name)
 
-print(hotel1.watermark)
-print(hotel2.watermark)
 
-print(Hotel.watermark)
+# hotel1 = Hotel("188")
+# hotel2 = Hotel("134")
 
-print(Hotel.get_hotel_count(df))
+# print(hotel1.available())
+# print(hotel1.name)
+# print(hotel2.name)
 
-ticket = ReservationTicket(customer_name="john smith ", hotel_object=hotel1)
-print(ticket.the_customer_name)
-print(ticket.generate())
+# print(hotel1.watermark)
+# print(hotel2.watermark)
 
-converted = ReservationTicket.convert(10)
-print(converted)
+# print(Hotel.watermark)
+
+# print(Hotel.get_hotel_count(df))
+
+# ticket = ReservationTicket(customer_name="john smith ", hotel_object=hotel1)
+# print(ticket.the_customer_name)
+# print(ticket.generate())
+
+# converted = ReservationTicket.convert(10)
+# print(converted)
