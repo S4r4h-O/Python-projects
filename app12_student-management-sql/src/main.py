@@ -1,6 +1,6 @@
-from sqlite3.dbapi2 import connect
 import sys
 import sqlite3
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import (QComboBox, QDialog, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QApplication, QGridLayout, 
                              QLabel, QLineEdit, QLabel, QPushButton, QMainWindow)
@@ -10,13 +10,20 @@ class MainWindows(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Student management system")
-        
+       
+        # Add tabs
         file_menu_item = self.menuBar().addMenu("&File")
         help_menu_item = self.menuBar().addMenu("&Help")
+        edit_menu_item = self.menuBar().addMenu("&Edit")
 
+        # Add actions to each tab 
         add_student_action = QAction("Add Student", self)
         add_student_action.triggered.connect(self.insert_student)
         file_menu_item.addAction(add_student_action)
+
+        search_students_action = QAction("Search names", self)
+        search_students_action.triggered.connect(self.search_student)
+        edit_menu_item.addAction(search_students_action)
 
         about_action = QAction("About", self)
         help_menu_item.addAction(about_action)
@@ -42,6 +49,10 @@ class MainWindows(QMainWindow):
 
     def insert_student(self):
         dialog = InsertDialog()
+        dialog.exec()
+
+    def search_student(self):
+        dialog = SearchDialog()
         dialog.exec()
 
 
@@ -89,6 +100,42 @@ class InsertDialog(QDialog):
         cursor.close()
         connection.close()
         management_system.load_data()
+
+
+class SearchDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Search for a name")
+        self.setFixedWidth(300)
+        self.setFixedHeight(300)
+
+        layout = QVBoxLayout()
+
+        self.search_name = QLineEdit()
+        self.search_name.setPlaceholderText("Name")
+        layout.addWidget(self.search_name)
+
+        button = QPushButton("Search")
+        button.clicked.connect(self.search_students_db)
+        layout.addWidget(button)
+
+        self.setLayout(layout)
+
+    def search_students_db(self):
+        name = self.search_name.text()
+        pattern = f"%{name}%"
+        connection = sqlite3.connect("database.db")
+        cursor = connection.cursor()
+        result = cursor.execute("SELECT * FROM students WHERE name LIKE ?", (pattern,))
+        rows = list(result)
+        print(rows)
+        items = management_system.table.findItems(name, Qt.MatchFlag.MatchContains)
+        for item in items:
+            print(item)
+            management_system.table.item(item.row(), 1).setSelected(True)
+
+        cursor.close()
+        connection.close()
 
 
 app = QApplication(sys.argv)
