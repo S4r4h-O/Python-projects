@@ -1,6 +1,7 @@
 import sys
+import sqlite3
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import (QTableWidget, QWidget, QApplication, QGridLayout, QLabel, QLineEdit, 
+from PyQt6.QtWidgets import (QTableWidget, QTableWidgetItem, QWidget, QApplication, QGridLayout, QLabel, QLineEdit, 
                              QLabel, QPushButton, QMainWindow)
 
 
@@ -21,13 +22,25 @@ class MainWindows(QMainWindow):
         self.table = QTableWidget()
         self.table.setColumnCount(4)
         self.table.setHorizontalHeaderLabels(("Id", "Name", "Course", "Mobile"))
+        self.table.verticalHeader().setVisible(False)
         self.setCentralWidget(self.table)
 
     def load_data(self):
-        self.table
+        connection = sqlite3.connect("database.db")
+        result = connection.execute("SELECT * FROM students")
+        
+        self.table.setRowCount(0)
+        # Row data is the columns of the table (tuples)
+        for row_number, row_data in enumerate(result):
+            self.table.insertRow(row_number)
+            # Data are the values of each column (tuples)
+            for column_number, data in enumerate(row_data):
+                self.table.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+        connection.close()
 
 
 app = QApplication(sys.argv)
 management_system = MainWindows()
 management_system.show()
+management_system.load_data()
 sys.exit(app.exec())
