@@ -3,8 +3,9 @@ import sys
 import sqlite3
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtWidgets import (QComboBox, QDialog, QMessageBox, QStatusBar, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QApplication, QGridLayout, 
-                             QLabel, QLineEdit, QLabel, QPushButton, QMainWindow, QToolBar)
+from PyQt6.QtWidgets import (QComboBox, QDialog, QMessageBox, QStatusBar, QTableWidget, QTableWidgetItem, 
+                             QVBoxLayout, QWidget, QApplication, QGridLayout, QLabel, QLineEdit, QLabel, 
+                             QPushButton, QMainWindow, QToolBar)
 
 
 class MainWindows(QMainWindow):
@@ -29,6 +30,7 @@ class MainWindows(QMainWindow):
 
         about_action = QAction("About", self)
         help_menu_item.addAction(about_action)
+        about_action.triggered.connect(self.about)
 
         self.table = QTableWidget()
         self.table.setColumnCount(4)
@@ -93,6 +95,21 @@ class MainWindows(QMainWindow):
     def delete(self):
         dialog = DeleteDialog()
         dialog.exec()
+
+    def about(self):
+        dialog = AboutDialog()
+        dialog.exec()
+
+
+class AboutDialog(QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("ABout")
+        content = """
+        This app was created during the course "The Python Mega Course",
+        from Ardit Sulce. Feel free to edit the code as you want.
+        """
+        self.setText(content)
 
 
 class EditDialog(QDialog):
