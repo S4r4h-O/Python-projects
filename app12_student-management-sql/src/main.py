@@ -1,27 +1,28 @@
 import sys
 import sqlite3
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import (QComboBox, QDialog, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QApplication, QGridLayout, 
-                             QLabel, QLineEdit, QLabel, QPushButton, QMainWindow)
+                             QLabel, QLineEdit, QLabel, QPushButton, QMainWindow, QToolBar)
 
 
 class MainWindows(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Student management system")
-       
+        self.setMinimumSize(800, 600)
+
         # Add tabs
         file_menu_item = self.menuBar().addMenu("&File")
         help_menu_item = self.menuBar().addMenu("&Help")
         edit_menu_item = self.menuBar().addMenu("&Edit")
 
         # Add actions to each tab 
-        add_student_action = QAction("Add Student", self)
+        add_student_action = QAction(QIcon("assets/add.png"), "Add Student", self)
         add_student_action.triggered.connect(self.insert_student)
         file_menu_item.addAction(add_student_action)
 
-        search_students_action = QAction("Search names", self)
+        search_students_action = QAction(QIcon("assets/search.png"), "Search names", self)
         search_students_action.triggered.connect(self.search_student)
         edit_menu_item.addAction(search_students_action)
 
@@ -33,6 +34,13 @@ class MainWindows(QMainWindow):
         self.table.setHorizontalHeaderLabels(("Id", "Name", "Course", "Mobile"))
         self.table.verticalHeader().setVisible(False)
         self.setCentralWidget(self.table)
+
+        # Create toolbar and add toolbar elements
+        toolbar = QToolBar()
+        toolbar.setMovable(True)
+        self.addToolBar(toolbar)
+        toolbar.addAction(add_student_action)
+        toolbar.addAction(search_students_action)
 
     def load_data(self):
         connection = sqlite3.connect("database.db")
