@@ -14,6 +14,9 @@ MY_PASSWORD = getenv("PASSWORD")
 
 class WebAutomation:
     def __init__(self):
+        self.driver = None
+        
+    def start(self):
         options = Options()
         options.binary_location = "/usr/bin/librewolf"
         options.add_argument("--disable-search-engine-choice-screen")
@@ -88,6 +91,7 @@ class WebAutomation:
 
 if __name__ == "__main__":
     web_automation = WebAutomation()
+    web_automation.start()
     web_automation.login(MY_USERNAME, MY_PASSWORD)
     web_automation.fill_form("John Smith", "john@gmail.com", 
                              "John Street 100", "John Street 100")
