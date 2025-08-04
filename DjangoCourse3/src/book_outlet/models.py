@@ -1,7 +1,16 @@
+from typing import Counter
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.urls import reverse
 from django.utils.text import slugify
+
+
+class Country(models.Model):
+    name = models.CharField(max_length=30)
+    code = models.CharField(max_length=3)
+
+    def __str__(self):
+        return str(self.name)
 
 
 class Address(models.Model):
@@ -38,7 +47,9 @@ class Book(models.Model):
     is_bestselling = models.BooleanField(default=False)
     slug = models.SlugField(default="", blank=True,
                             null=False, db_index=True)
-    
+    published_countries = models.ManyToManyField(Country, 
+                                        related_name="books")
+
     def get_absolute_url(self):
         return reverse("book_detail_slug", args=[self.slug])
 
