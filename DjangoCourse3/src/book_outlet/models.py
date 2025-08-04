@@ -13,6 +13,10 @@ class Country(models.Model):
         return str(self.name)
 
 
+    class Meta:
+        verbose_name_plural = "Countries"
+
+
 class Address(models.Model):
     street = models.CharField(max_length=80)
     postal_code = models.CharField(max_length=20)
@@ -20,6 +24,7 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.street}, {self.city} - {self.postal_code}"
+
 
     class Meta:
         verbose_name_plural = "Addresses"
@@ -48,7 +53,7 @@ class Book(models.Model):
     slug = models.SlugField(default="", blank=True,
                             null=False, db_index=True)
     published_countries = models.ManyToManyField(Country, 
-                                        related_name="books")
+                                        related_name="books", null=True)
 
     def get_absolute_url(self):
         return reverse("book_detail_slug", args=[self.slug])
