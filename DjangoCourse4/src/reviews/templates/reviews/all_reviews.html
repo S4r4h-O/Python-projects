@@ -1,0 +1,15 @@
+{% extends "reviews/base.html" %}
+
+{% block title %}
+All Reviews
+{% endblock %}
+
+{% block content %}
+<h1>All Reviews:</h1>
+{% for review in reviews %}
+<ul>
+    <li><a href="{% url "review-detail" review.id %}">{{ review }}</a></li>
+    <p>{{ review.review_text }}</p>
+</ul>
+{% endfor %}
+{% endblock %}
