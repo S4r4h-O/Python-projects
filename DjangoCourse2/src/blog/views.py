@@ -26,3 +26,8 @@ class AllPostsView(ListView):
 class PostDetailView(DetailView):
     template_name = "blog/post-detail.html"
     model = Post
+
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context["post_tag"] = self.object.tag.all()
+        return context
